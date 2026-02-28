@@ -8,6 +8,20 @@ import JobCard from "@/components/JobCard";
 import Button from "@/components/Button";
 import { apiGet } from "@/lib/api";
 
+
+function JobsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-40 animate-pulse rounded-xl border border-gray-200 bg-white"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -120,7 +134,7 @@ export default function HomePage() {
               {err}
             </div>
           ) : loading ? (
-            <div className="text-sm text-gray-600">Loading jobs...</div>
+            <JobsSkeleton />
           ) : jobs.length === 0 ? (
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm text-gray-700">
               No jobs found. Try changing your filters.

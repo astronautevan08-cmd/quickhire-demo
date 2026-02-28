@@ -7,6 +7,7 @@ dotenv.config();
 const { sequelize } = require("./models");
 const jobsRoutes = require("./routes/jobs.routes");
 const applicationsRoutes = require("./routes/applications.routes");
+const devRoutes = require("./routes/dev.routes");
 
 const app = express();
 
@@ -23,6 +24,11 @@ app.get("/health", (_req, res) => {
 
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/applications", applicationsRoutes);
+app.use("/api/dev", devRoutes);
+
+app.use((req, res) => {
+  return res.status(404).json({ success: false, message: "Route not found" });
+});
 
 async function start() {
   try {
