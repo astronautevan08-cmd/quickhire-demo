@@ -30,9 +30,11 @@ type JobForm = {
 function getErrorMessage(err: unknown) {
   if (err instanceof Error) return err.message;
   if (typeof err === "string") return err;
+
   if (err && typeof err === "object") {
-    const anyErr = err as any;
-    if (typeof anyErr.message === "string") return anyErr.message;
+    if ("message" in err && typeof (err as { message?: unknown }).message === "string") {
+      return (err as { message: string }).message;
+    }
     try {
       return JSON.stringify(err);
     } catch {
