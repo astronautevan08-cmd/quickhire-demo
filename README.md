@@ -123,6 +123,9 @@ Frontend will run on:
 
 ## Example Requests
 
+## Admin dashboard:
+http://localhost:3000/admin
+
 ### Create Job (Admin)
 
 `POST http://localhost:4001/api/jobs`
