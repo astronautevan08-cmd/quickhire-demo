@@ -3,7 +3,7 @@ import { Palette, TrendingUp, Megaphone, DollarSign, Monitor, Code, Briefcase, U
 const categories = [
   { icon: Palette, name: "Design", count: 235, color: "text-primary" },
   { icon: TrendingUp, name: "Sales", count: 756, color: "text-secondary" },
-  { icon: Megaphone, name: "Marketing", count: 140, color: "text-primary", featured: true },
+  { icon: Megaphone, name: "Marketing", count: 140, color: "text-primary", featured: false },
   { icon: DollarSign, name: "Finance", count: 325, color: "text-muted-foreground" },
   { icon: Monitor, name: "Technology", count: 436, color: "text-muted-foreground" },
   { icon: Code, name: "Engineering", count: 542, color: "text-muted-foreground" },

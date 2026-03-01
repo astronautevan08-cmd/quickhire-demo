@@ -20,8 +20,20 @@ export default function HomePage() {
 
   const { data: jobs, isLoading } = useJobs(filters);
 
-  const featured = useMemo(() => (jobs || []).slice(0, 4), [jobs]);
-  const latest = useMemo(() => (jobs || []).slice(0, 10), [jobs]);
+  // const featured = useMemo(() => (jobs || []).slice(0, 4), [jobs]);
+  // const latest = useMemo(() => (jobs || []).slice(0, 10), [jobs]);
+
+  const featured = useMemo(() => {
+  const list = jobs || [];
+  const featuredJobs = list.filter((j) => j.is_featured);
+  return (featuredJobs.length ? featuredJobs : list).slice(0, 4);
+}, [jobs]);
+
+const latest = useMemo(() => {
+  const list = [...(jobs || [])];
+  list.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+  return list.slice(0, 10);
+}, [jobs]);
 
   return (
     <>

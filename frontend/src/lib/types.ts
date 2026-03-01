@@ -6,6 +6,8 @@ export type Job = {
   category: string;
   description: string;
   created_at: string;
+  is_featured: boolean;             
+  application_count?: number;
   applications?: Application[];
 };
 

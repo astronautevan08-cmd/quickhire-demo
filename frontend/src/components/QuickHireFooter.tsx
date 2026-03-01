@@ -1,4 +1,14 @@
 import Link from "next/link";
+import { Facebook, Instagram, Dribbble, Linkedin, Twitter } from "lucide-react";
+
+const socialLinks = [
+  { href: "#", label: "Facebook", Icon: Facebook },
+  { href: "#", label: "Instagram", Icon: Instagram },
+  { href: "#", label: "Dribbble", Icon: Dribbble },
+  { href: "#", label: "LinkedIn", Icon: Linkedin },
+  { href: "#", label: "Twitter", Icon: Twitter },
+];
+
 const QuickHireFooter = () => {
   return (
     <footer className="bg-foreground text-background">
@@ -111,13 +121,16 @@ const QuickHireFooter = () => {
             2021 © QuickHire. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
-            {["f", "◎", "◉", "in", "▶"].map((icon, i) => (
+            {socialLinks.map(({ href, label, Icon }) => (
               <a
-                key={i}
-                href="#"
-                className="w-8 h-8 rounded-full border border-background/20 flex items-center justify-center text-xs text-background/60 hover:text-background transition-colors"
+                key={label}
+                href={href}
+                aria-label={label}
+                target="_blank"
+                rel="noreferrer"
+                className="w-10 h-10 rounded-full bg-background/10 border border-background/15 flex items-center justify-center text-background/70 hover:text-background hover:bg-background/15 transition"
               >
-                {icon}
+                <Icon className="w-4 h-4" />
               </a>
             ))}
           </div>

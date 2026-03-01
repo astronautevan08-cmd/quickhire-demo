@@ -6,6 +6,12 @@ const createJobSchema = z.object({
   location: z.string().min(1, "location is required"),
   category: z.string().min(1, "category is required"),
   description: z.string().min(1, "description is required"),
+  is_featured: z.boolean().optional(),
 });
 
-module.exports = { createJobSchema };
+const updateFeaturedSchema = z.object({
+  is_featured: z.boolean(),
+});
+
+
+module.exports = { createJobSchema, updateFeaturedSchema };

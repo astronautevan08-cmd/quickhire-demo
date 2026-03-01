@@ -5,6 +5,7 @@ import {
   createJob,
   deleteJob,
   createApplication,
+  setFeatured,
 } from "@/lib/api";
 
 type ApplyBody = {
@@ -53,5 +54,17 @@ export function useDeleteJob() {
 export function useCreateApplication() {
   return useMutation({
     mutationFn: (body: ApplyBody) => createApplication(body),
+  });
+}
+
+export function useSetFeatured() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, is_featured }: { id: string; is_featured: boolean }) =>
+      setFeatured(id, is_featured),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["jobs"] });
+      qc.invalidateQueries({ queryKey: ["job"] });
+    },
   });
 }

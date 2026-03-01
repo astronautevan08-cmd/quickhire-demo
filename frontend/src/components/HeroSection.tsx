@@ -3,6 +3,9 @@
 import { Search, MapPin } from "lucide-react";
 import Image from "next/image";
 import heroPerson from "@/assets/hero-person.png";
+import { useJobs } from "@/hooks/useJobsApi";
+import { useMemo } from "react";
+import SoftSelect from "@/components/ui/SoftSelect";
 
 type HeroFilters = {
   search: string;
@@ -16,13 +19,32 @@ type HeroSectionProps = {
 };
 
 const HeroSection = ({ value, onChange }: HeroSectionProps) => {
+  //  get all jobs only for dropdown options (so it doesn't shrink)
+  const { data: allJobs } = useJobs({});
+
+  const locationOptions = useMemo(() => {
+    const set = new Set<string>();
+    (allJobs || []).forEach((j) => {
+      const v = (j.location || "").trim();
+      if (v) set.add(v);
+    });
+
+    const list = Array.from(set).sort((a, b) => a.localeCompare(b));
+    return [
+      { label: "All locations", value: "" },
+      ...list.map((l) => ({ label: l, value: l })),
+    ];
+  }, [allJobs]);
+
   return (
     <section className="container mx-auto px-4 md:px-8 py-12 md:py-20">
       <div className="flex flex-col md:flex-row items-center gap-8">
         <div className="flex-1 max-w-xl">
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-            Discover<br />
-            more than<br />
+            Discover
+            <br />
+            more than
+            <br />
             <span className="text-primary">5000+ Jobs</span>
           </h1>
 
@@ -45,11 +67,13 @@ const HeroSection = ({ value, onChange }: HeroSectionProps) => {
           </div>
 
           <p className="text-muted-foreground text-base md:text-lg mb-8 max-w-md">
-            Great platform for the job seeker that searching for new career heights and passionate about startups.
+            Great platform for the job seeker that searching for new career heights
+            and passionate about startups.
           </p>
 
-          {/* Search Bar */}
-          <div className="bg-background border border-border rounded-lg shadow-sm flex flex-col sm:flex-row items-stretch overflow-hidden">
+          {/*  Search Bar */}
+          <div className="bg-background border border-border rounded-lg shadow-sm flex flex-col sm:flex-row items-stretch">
+            {/* Search */}
             <div className="flex items-center gap-2 px-4 py-3 flex-1 border-b sm:border-b-0 sm:border-r border-border">
               <Search className="w-5 h-5 text-muted-foreground" />
               <input
@@ -61,18 +85,19 @@ const HeroSection = ({ value, onChange }: HeroSectionProps) => {
               />
             </div>
 
-            <div className="flex items-center gap-2 px-4 py-3 flex-1 border-b sm:border-b-0 sm:border-r border-border">
-              <MapPin className="w-5 h-5 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Location"
+            {/* Location (custom dropdown) */}
+            <div className="flex items-center px-2 py-2 flex-1 border-b sm:border-b-0 sm:border-r border-border">
+              <SoftSelect
                 value={value.location}
-                onChange={(e) => onChange({ ...value, location: e.target.value })}
-                className="bg-transparent outline-none text-sm text-foreground placeholder:text-muted-foreground w-full"
+                onChange={(v) => onChange({ ...value, location: v })}
+                options={locationOptions}
+                placeholder="Location"
+                icon={<MapPin className="w-5 h-5" />}
+                className="w-full"
               />
             </div>
 
-            {/* This button is optional (filters already update live). Keep it for UI. */}
+            {/* Button */}
             <button
               type="button"
               className="bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:bg-primary/90 transition-colors whitespace-nowrap"
@@ -83,7 +108,10 @@ const HeroSection = ({ value, onChange }: HeroSectionProps) => {
           </div>
 
           <p className="mt-4 text-sm text-muted-foreground">
-            Popular : <span className="text-foreground">UI Designer, UX Researcher, Android, Admin</span>
+            Popular :{" "}
+            <span className="text-foreground">
+              UI Designer, UX Researcher, Android, Admin
+            </span>
           </p>
         </div>
 

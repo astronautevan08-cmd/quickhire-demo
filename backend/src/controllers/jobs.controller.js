@@ -1,6 +1,6 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { Job, Application } = require("../models");
-const { createJobSchema } = require("../validators/job.validator");
+const { createJobSchema, updateFeaturedSchema } = require("../validators/job.validator");
 const {
   ok,
   created,
@@ -28,6 +28,21 @@ const listJobs = asyncHandler(async (req, res) => {
 
   const jobs = await Job.findAll({
     where,
+    //  include application_count
+    attributes: {
+      include: [
+        [Sequelize.fn("COUNT", Sequelize.col("applications.id")), "application_count"],
+      ],
+    },
+    include: [
+      {
+        model: Application,
+        as: "applications",
+        attributes: [],
+        required: false,
+      },
+    ],
+    group: ["Job.id"],
     order: [["created_at", "DESC"]],
   });
 
@@ -68,9 +83,29 @@ const deleteJob = asyncHandler(async (req, res) => {
   return ok(res, { id }, "Job deleted");
 });
 
+
+// PATCH /api/jobs/:id/featured (admin)
+const updateFeatured = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const parsed = updateFeaturedSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return badRequest(res, "Validation error", parsed.error.flatten());
+  }
+
+  const job = await Job.findByPk(id);
+  if (!job) return notFound(res, "Job not found");
+
+  job.is_featured = parsed.data.is_featured;
+  await job.save();
+
+  return ok(res, job, "Job updated");
+});
+
 module.exports = {
   listJobs,
   getJobById,
   createJob,
   deleteJob,
+  updateFeatured,
 };

@@ -33,7 +33,7 @@ async function request<T>(
   return json.data;
 }
 
-// ✅ GET /api/jobs?search=&category=&location=
+//  GET /api/jobs?search=&category=&location=
 export function fetchJobs(params: {
   search?: string;
   category?: string;
@@ -60,11 +60,20 @@ export function createJob(body: {
   location: string;
   category: string;
   description: string;
+  is_featured?: boolean;
 }) {
   return request<Job>(`/api/jobs`, {
     method: "POST",
     headers: getAdminHeaders(),
     body: JSON.stringify(body),
+  });
+}
+
+export function setFeatured(id: string, is_featured: boolean) {
+  return request<Job>(`/api/jobs/${id}/featured`, {
+    method: "PATCH",
+    headers: getAdminHeaders(),
+    body: JSON.stringify({ is_featured }),
   });
 }
 
