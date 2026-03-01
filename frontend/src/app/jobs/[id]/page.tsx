@@ -21,9 +21,8 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function JobDetailsPage() {
-  const params = useParams();
-  const rawId = (params as any)?.id;
-  const id: string | undefined = Array.isArray(rawId) ? rawId[0] : rawId;
+  const params = useParams<{ id: string }>();
+  const id = params?.id;
 
   const { data: job, isLoading, error } = useJob(id || "");
   const apply = useCreateApplication();
@@ -61,10 +60,11 @@ export default function JobDetailsPage() {
       });
 
       form.reset();
-    } catch (e: any) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Could not submit application";
       toast({
         title: "Failed",
-        description: e.message || "Could not submit application",
+        description: msg,
         variant: "destructive",
       });
     }

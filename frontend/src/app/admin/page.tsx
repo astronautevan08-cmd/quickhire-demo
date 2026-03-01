@@ -133,12 +133,11 @@ export default function AdminPage() {
 
   //  FIX: total applicants from application_count
   const totalApplicants = useMemo(() => {
-  return (allJobs || []).reduce((sum, j) => {
-    const raw = (j.application_count ?? 0) as any;
-    const n = typeof raw === "string" ? Number(raw) : Number(raw);
-    return sum + (Number.isFinite(n) ? n : 0);
-  }, 0);
-}, [allJobs]);
+    return (allJobs || []).reduce((sum, j) => {
+      const n = Number(j.application_count ?? 0);
+      return sum + (Number.isFinite(n) ? n : 0);
+    }, 0);
+  }, [allJobs]);
 
   const featuredCount = useMemo(() => {
     return (allJobs || []).filter((j) => j.is_featured).length;
@@ -413,11 +412,11 @@ export default function AdminPage() {
                           </Button>
 
                           <Link href={`/jobs/${j.id}`} className="inline-flex">
-    <Button type="button" variant="outline" className="h-9">
-      <Eye className="w-4 h-4 mr-2" />
-      View
-    </Button>
-  </Link>
+                            <Button type="button" variant="outline" className="h-9">
+                              <Eye className="w-4 h-4 mr-2" />
+                              View
+                            </Button>
+                          </Link>
 
                           <Button
                             variant="destructive"
